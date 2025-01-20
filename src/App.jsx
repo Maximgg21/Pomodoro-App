@@ -22,7 +22,7 @@ function App() {
     pomodoro: 1500000,
     shortBreak: 300000,
     longBreak: 900000,
-    fontOption: "roboto",
+    fontOption: "font-roboto",
     colorOption: "theme1"
   });
   const [currentTime, setCurrentTime] = useState(settings[option]); // Time in milliseconds
