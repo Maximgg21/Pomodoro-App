@@ -5,6 +5,11 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    fontFamily: {
+      'roboto': ['Roboto', 'serif'],
+      'robotoMono': ['Roboto\\ Mono', 'serif'],
+      'playwriteIN': ['Playwrite\\ IN', 'serif'],
+    },
     extend: {
       colors: {
         logo: "rgba(190, 195, 225, 1)",
