@@ -6,7 +6,7 @@ import Settings from "./components/Settings";
 function TimeOptionButton({ children, currentOption, name, settings, ...rest }) {
   return (
     <button
-      className={`font-semibold rounded-full px-5 py-3 transition-colors duration-500 ${
+      className={`font-semibold rounded-full px-5 py-3 transition-colors duration-500 touch-manipulation ${
         currentOption === name ? "bg-" + settings.colorOption : "bg-transparent text-optionText"
       }`}
       {...rest}
@@ -27,7 +27,7 @@ function App() {
   });
   const [currentTime, setCurrentTime] = useState(settings[option]); // Time in milliseconds
   const [isRunning, setIsRunning] = useState(false);
-  const [showSettings, setShowSettings] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
 
   let percentageFilled = 100 - (currentTime / settings[option]) * 100;
 
@@ -97,7 +97,7 @@ function App() {
         setIsRunning={setIsRunning}
         settings={settings}
       />
-      <button className="" onClick={() => {setShowSettings(true); setIsRunning(false)}}>
+      <button className="touch-manipulation" onClick={() => {setShowSettings(true); setIsRunning(false)}}>
         <IoMdSettings className="size-10 text-optionText" />
       </button>
       {showSettings && (
