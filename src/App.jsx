@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Clock from "./components/Clock";
 import { IoMdSettings } from "react-icons/io";
 import Settings from "./components/Settings";
@@ -19,7 +19,7 @@ function TimeOptionButton({ children, currentOption, name, settings, ...rest }) 
 function App() {
   const [option, setOption] = useState("pomodoro");
   const [settings, setSettings] = useState({
-    pomodoro: 1500000,
+    pomodoro: 180000,
     shortBreak: 300000,
     longBreak: 900000,
     fontOption: "font-roboto",
@@ -28,6 +28,7 @@ function App() {
   const [currentTime, setCurrentTime] = useState(settings[option]); // Time in milliseconds
   const [isRunning, setIsRunning] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const audioRef = useRef(null);
 
   let percentageFilled = 100 - (currentTime / settings[option]) * 100;
 
@@ -39,6 +40,7 @@ function App() {
           if (time > 0) {
             return time - 10;
           } else {
+            audioRef.current && audioRef.current.play(); 
             clearInterval(timer);
             return 0;
           }
@@ -51,7 +53,11 @@ function App() {
 
   return (
     <div className={`min-h-screen flex flex-col items-center gap-10 py-10 relative ${settings.fontOption}`}>
-      <div className="text-3xl text-logo font-bold">pomodoro</div>
+      <div className="text-logo font-bold text-center uppercase grid gap-2 -my-5">
+        <div className="text-3xl tracking-[10px]">Brass</div>
+        <hr className="bg-gray-300 w-full"/>
+        <div className="tracking-widest">Birmingham</div>
+      </div>
       <div className="max-w- flex p-2 bg-slate-900 rounded-full tracking-tight">
         <TimeOptionButton
           settings={settings}
@@ -108,6 +114,7 @@ function App() {
           setCurrentTime={() => setCurrentTime(settings[option])}
         />
       )}
+      <audio ref={audioRef} src="public\dingSound.mp3" />
     </div>
   );
 }
