@@ -1,8 +1,7 @@
 export default function Clock({timeMs=0, percentageFilled=0, isRunning=false, setIsRunning, settings}) {
     const timeSec = Math.ceil(timeMs / 1000);
     const clockSec = timeSec % 60;
-    let clockMin = Math.floor(timeSec / 60);
-    clockMin = clockMin > 59 ? clockMin % 60 : clockMin;
+    const clockMin = Math.floor((timeSec % 3600) / 60);
     const clockHr = Math.floor(timeSec / 3600);
 
     const colors = {
@@ -12,7 +11,7 @@ export default function Clock({timeMs=0, percentageFilled=0, isRunning=false, se
     };
 
     return (
-        <div className="size-80 rounded-full bg-gradient-to-br from-darkerBackground from-20% to-lighterBackground max-w-96 flex justify-center items-center">
+        <div className="size-80 rounded-full bg-gradient-to-br from-darkerBackground from-20% to-lighterBackground flex shrink-0 justify-center items-center">
             <div className="size-[85%] flex flex-col justify-center items-center rounded-full bg-darkerBackground">
                 <div className={`flex flex-col justify-center items-center size-[93%] rounded-full`} style={{background: `conic-gradient(${colors[settings.colorOption]} ${percentageFilled}%, rgba(21, 25, 50, 1) 0)`}}>
                     <button className="size-[93%] rounded-full bg-darkerBackground flex flex-col justify-center items-center text-clockText touch-manipulation" onClick={() => setIsRunning(prev => !prev)}>

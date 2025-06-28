@@ -1,14 +1,16 @@
+import { useState } from "react";
 import { MdDone } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
+import { IoMdSettings } from "react-icons/io";
 
-function TimeOption({children, value, setSettings, ...rest}) {
+function TimeOption({children, value, setTempSettings, ...rest}) {
     return (
         <label className="flex justify-between items-center">
             <span className="text-optionText">{children}</span>
             <input 
                 {...rest}
                 className="bg-optionInput w-1/2 rounded-md px-3 py-2 font-semibold" 
-                onChange={e => setSettings(prev => {
+                onChange={e => setTempSettings(prev => {
                     const {name, value} = e.target;
                     if (value === "") {
                         return {
@@ -24,7 +26,7 @@ function TimeOption({children, value, setSettings, ...rest}) {
                     }
                 })}
                 value={value} 
-                onBlur={e => setSettings(prev => {
+                onBlur={e => setTempSettings(prev => {
                     const {name, value} = e.target;
                     if (value === "") {
                         return {
@@ -36,77 +38,116 @@ function TimeOption({children, value, setSettings, ...rest}) {
                         return prev
                     }
                 })}
-                type="number" 
+                type="number"
+                min="1"
+                step="1"
             />
         </label>
     )
 }
 
-export default function Settings({settings, setSettings, setShowSettings, setCurrentTime}) {
-    const {pomodoro, shortBreak, longBreak} = settings;
+function FontOption({font, setTempSettings, tempSettings, ...rest}) {
+    return <button className={`grid place-content-center rounded-full size-12 ${font} ${tempSettings.fontOption === rest.name ? "bg-darkerBackground text-white" : "bg-gray-400"}`} {...rest} onClick={(e) => setTempSettings(prev => ({...prev, fontOption: e.target.name}))}>Aa</button>
+}
+
+function ColorOption({color, setTempSettings, tempSettings, ...rest}) {
+    return (
+        <button className={`${color} size-12 rounded-full flex justify-center items-center`} {...rest} onClick={(e) => setTempSettings(prev => ({...prev, colorOption: e.target.name}))}>
+            {tempSettings.colorOption === rest.name && <MdDone className="pointer-events-none" size={24}/>}
+        </button>
+    )
+}
+
+export default function Settings({settings, onApply}) {
+    const [showSettings, setShowSettings] = useState(false);
+    const [tempSettings, setTempSettings] = useState(settings);
+    const {pomodoro, shortBreak, longBreak} = tempSettings;
     const Title = ({children}) => <div className="flex justify-center uppercase font-semibold tracking-widest">{children}</div>
     const Hr = () => <hr className="border-logo "/>
     
-    function FontOption({font, ...rest}) {
-        return <button className={`grid place-content-center rounded-full size-12 ${font} ${settings.fontOption === rest.name ? "bg-darkerBackground text-white" : "bg-gray-400"}`} {...rest} onClick={(e) => setSettings(prev => ({...prev, fontOption: e.target.name}))}>Aa</button>
-    }
-
-    function ColorOption({color, ...rest}) {
-        return (
-            <button className={`${color} size-12 rounded-full flex justify-center items-center`} {...rest} onClick={(e) => setSettings(prev => ({...prev, colorOption: e.target.name}))}>
-                {settings.colorOption === rest.name && <MdDone size={24}/>}
-            </button>
-        )
+    function handleApply() {
+        onApply(tempSettings);
+        setShowSettings(false);
     }
 
     return (
-        <div className="absolute bg-white w-[90%] text-black rounded-lg">
-            <div className="flex justify-between items-center px-6 py-5">
-                <span className="text-xl font-semibold">Settings</span>
-                <button className="text-2xl touch-manipulation" onClick={() => {setShowSettings(false); setCurrentTime()}}><IoCloseOutline /></button>
-            </div>
-            <Hr />
-            <div className="flex flex-col gap-5 px-5 pt-7 pb-16">
-                <section className="flex flex-col gap-2">
-                    <Title>time (minutes)</Title>
-                    <TimeOption 
-                        name="pomodoro" 
-                        value={pomodoro === "" ? "" : (pomodoro / 1000 / 60)}
-                        setSettings={setSettings}
-                        >pomodoro
-                    </TimeOption>
-                    <TimeOption 
-                        name="shortBreak" 
-                        value={shortBreak === "" ? "" : (shortBreak / 1000 / 60)}
-                        setSettings={setSettings}
-                        >short break
-                    </TimeOption>
-                    <TimeOption 
-                        name="longBreak" 
-                        value={longBreak === "" ? "" : (longBreak / 1000 / 60)}
-                        setSettings={setSettings}
-                        >long break
-                    </TimeOption>
-                </section>
+        <>
+            <button className="touch-manipulation" onClick={() => {setShowSettings(true)}}>
+                <IoMdSettings className="size-10 text-optionText" />
+            </button>
+
+            {showSettings && 
+            <div className="absolute bg-white w-[90%] max-w-[500px] max-h-[90%] text-black rounded-lg overflow-auto">
+                <div className="flex justify-between items-center px-6 py-5">
+                    <span className="text-xl font-semibold">Settings</span>
+                    <button className="text-2xl touch-manipulation" onClick={() => setShowSettings(false)}><IoCloseOutline /></button>
+                </div>
                 <Hr />
-                <section className="flex flex-col gap-3">
-                    <Title>font</Title>
-                    <div className="flex gap-5 justify-center">
-                        <FontOption font="font-roboto" name="font-roboto"/>
-                        <FontOption font="font-robotoMono" name="font-robotoMono"/>
-                        <FontOption font="font-playwriteIN" name="font-playwriteIN"/>
-                    </div>
-                </section>
-                <Hr />
-                <section className="flex flex-col gap-3">
-                    <Title>color</Title>
-                    <div className="flex gap-5 justify-center">
-                        <ColorOption color="bg-theme1" name="theme1"/>
-                        <ColorOption color="bg-theme2" name="theme2"/>
-                        <ColorOption color="bg-theme3" name="theme3"/>
-                    </div>
-                </section>
-            </div>
-        </div>
+                <div className="flex flex-col gap-5 px-5 py-7 w-full">
+                    <section className="flex flex-col gap-2 items-center">
+                        <Title>time (minutes)</Title>
+                        <TimeOption 
+                            name="pomodoro" 
+                            value={pomodoro === "" ? "" : (pomodoro / 1000 / 60)}
+                            setTempSettings={setTempSettings}
+                            >pomodoro
+                        </TimeOption>
+                        <TimeOption 
+                            name="shortBreak" 
+                            value={shortBreak === "" ? "" : (shortBreak / 1000 / 60)}
+                            setTempSettings={setTempSettings}
+                            >short break
+                        </TimeOption>
+                        <TimeOption 
+                            name="longBreak" 
+                            value={longBreak === "" ? "" : (longBreak / 1000 / 60)}
+                            setTempSettings={setTempSettings}
+                            >long break
+                        </TimeOption>
+                    </section>
+                    <Hr />
+                    <section className="flex flex-col gap-3">
+                        <Title>font</Title>
+                        <div className="flex gap-5 justify-center">
+                            <FontOption 
+                            setTempSettings={setTempSettings}
+                            tempSettings={tempSettings}
+                            font="font-roboto" name="font-roboto"/>
+                            <FontOption 
+                            setTempSettings={setTempSettings}
+                            tempSettings={tempSettings}
+                            font="font-robotoMono" name="font-robotoMono"/>
+                            <FontOption 
+                            setTempSettings={setTempSettings}
+                            tempSettings={tempSettings}
+                            font="font-playwriteIN" name="font-playwriteIN"/>
+                        </div>
+                    </section>
+                    <Hr />
+                    <section className="flex flex-col gap-3">
+                        <Title>color</Title>
+                        <div className="flex gap-5 justify-center">
+                            <ColorOption 
+                            setTempSettings={setTempSettings}
+                            tempSettings={tempSettings}
+                            color="bg-theme1" name="theme1"/>
+                            <ColorOption 
+                            setTempSettings={setTempSettings}
+                            tempSettings={tempSettings}
+                            color="bg-theme2" name="theme2"/>
+                            <ColorOption 
+                            setTempSettings={setTempSettings}
+                            tempSettings={tempSettings}
+                            color="bg-theme3" name="theme3"/>
+                        </div>
+                    </section>
+
+                    <button 
+                        className="bg-orange-300 rounded-full w-52 py-5 self-center"
+                        onClick={handleApply}
+                    >Apply Changes</button>
+                </div>
+            </div>}
+        </>
     )
 }
