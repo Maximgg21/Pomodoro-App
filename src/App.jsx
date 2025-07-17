@@ -2,16 +2,12 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import Clock from "./components/Clock";
 import Settings from "./components/Settings";
 import TimeOptionButton from "./components/TimeOptionButton";
+import { DEFAULT_SETTINGS } from "./config/defaultSettings";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
   const [timerMode, setTimerMode] = useState("pomodoro");
-  const [settings, setSettings] = useState({
-    pomodoro: 1500000,
-    shortBreak: 300000,
-    longBreak: 900000,
-    fontOption: "font-roboto",
-    colorOption: "theme1"
-  });
+  const [settings, setSettings] = useLocalStorage("settings", DEFAULT_SETTINGS);
   const [remainingTime, setRemainingTime] = useState(settings[timerMode]); // Time in milliseconds
   const [isRunning, setIsRunning] = useState(false);
   const audioRef = useRef(null);
@@ -67,7 +63,7 @@ function App() {
   }
 
   return (
-    <div className={`touch-manipulation min-h-screen overflow-auto flex flex-col items-center justify-center gap-10 sm:gap-[3vh] py-[3vh] relative ${settings.fontOption}`}>
+    <div className={`touch-manipulation min-h-screen overflow-auto flex flex-col items-center justify-center gap-10 sm:gap-[3vh] py-[3vh] relative font-${settings.fontOption}`}>
       <div className="text-logo font-bold text-center uppercase grid ">
         <div className="text-2xl tracking-[10px]">Pomodoro</div>
       </div>

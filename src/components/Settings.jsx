@@ -47,7 +47,7 @@ function TimeOption({children, value, setTempSettings, ...rest}) {
 }
 
 function FontOption({font, setTempSettings, tempSettings, ...rest}) {
-    return <button className={`grid place-content-center rounded-full size-12 ${font} ${tempSettings.fontOption === rest.name ? "bg-darkerBackground text-white" : "bg-gray-400"}`} {...rest} onClick={(e) => setTempSettings(prev => ({...prev, fontOption: e.target.name}))}>Aa</button>
+    return <button className={`grid place-content-center rounded-full size-12 font-${font} ${tempSettings.fontOption === rest.name ? "bg-darkerBackground text-white" : "bg-gray-400"}`} {...rest} onClick={(e) => setTempSettings(prev => ({...prev, fontOption: e.target.name}))}>Aa</button>
 }
 
 function ColorOption({color, setTempSettings, tempSettings, ...rest}) {
@@ -77,7 +77,7 @@ export default function Settings({settings, onApply}) {
             </button>
 
             {showSettings && 
-            <div className="absolute bg-white w-[90%] max-w-[500px] max-h-[90%] text-black rounded-lg overflow-auto">
+            <div className="absolute bg-white w-[90%] max-w-[500px] max-h-[90%] text-black rounded-lg pb-8 overflow-visible">
                 <div className="flex justify-between items-center px-6 py-5">
                     <span className="text-xl font-semibold">Settings</span>
                     <button className="text-2xl touch-manipulation" onClick={() => setShowSettings(false)}><IoCloseOutline /></button>
@@ -112,15 +112,15 @@ export default function Settings({settings, onApply}) {
                             <FontOption 
                             setTempSettings={setTempSettings}
                             tempSettings={tempSettings}
-                            font="font-roboto" name="font-roboto"/>
+                            font="roboto" name="roboto"/>
                             <FontOption 
                             setTempSettings={setTempSettings}
                             tempSettings={tempSettings}
-                            font="font-robotoMono" name="font-robotoMono"/>
+                            font="merriweather" name="merriweather"/>
                             <FontOption 
                             setTempSettings={setTempSettings}
                             tempSettings={tempSettings}
-                            font="font-playwriteIN" name="font-playwriteIN"/>
+                            font="lora" name="lora"/>
                         </div>
                     </section>
                     <Hr />
@@ -143,7 +143,7 @@ export default function Settings({settings, onApply}) {
                     </section>
 
                     <button 
-                        className="bg-orange-300 rounded-full w-52 py-5 self-center"
+                        className="absolute bg-orange-300 rounded-full w-52 py-5 bottom-0 translate-y-8 self-center"
                         onClick={handleApply}
                     >Apply Changes</button>
                 </div>

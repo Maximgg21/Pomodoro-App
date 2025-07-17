@@ -4,11 +4,16 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  safelist: [
+    'font-roboto',
+    'font-merriweather',
+    'font-lora',
+  ],
   theme: {
     fontFamily: {
-      'roboto': ['Roboto', 'serif'],
-      'robotoMono': ['Roboto\\ Mono', 'serif'],
-      'playwriteIN': ['Playwrite\\ IN', 'serif'],
+      'roboto': ['Roboto', 'sans-serif'],
+      'merriweather': ['Merriweather', 'sans-serif'],
+      'lora': ['Lora', 'sans-serif'],
     },
     extend: {
       colors: {
