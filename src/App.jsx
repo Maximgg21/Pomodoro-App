@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Clock from "./components/Clock";
-import Settings from "./components/Settings";
+import Settings from "./components/Settings/Settings";
 import TimeOptionButton from "./components/TimeOptionButton";
 import { DEFAULT_SETTINGS } from "./config/defaultSettings";
 import useLocalStorage from "./hooks/useLocalStorage";

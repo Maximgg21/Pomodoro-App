@@ -2,61 +2,7 @@ import { useState } from "react";
 import { MdDone } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
 import { IoMdSettings } from "react-icons/io";
-import { RiArrowUpSLine } from "react-icons/ri";
-import { RiArrowDownSLine } from "react-icons/ri";
-
-function TimeOption({children, setTempSettings, settings, ...rest}) {
-    return (
-        <label className="w-full flex justify-between items-center sm:flex-col sm:items-start">
-            <span className="text-optionText font-medium w-full">{children}</span>
-            <div className="relative w-full">
-                <input 
-                    {...rest}
-                    className={`bg-timeOptionInput w-full rounded-md outline-none border-2 border-transparent focus:border-${settings.colorOption} px-3 py-2 font-semibold`}
-                    onChange={e => setTempSettings(prev => {
-                        const {name, value} = e.target;
-                        if (value === "") {
-                            return {
-                                ...prev,
-                                [name]: ""
-                            }
-                        }
-                        else {
-                            return {
-                                ...prev,
-                                [name]: (value * 1000 * 60) // converting value from minutes to milliseconds
-                            }
-                        }
-                    })}
-                    onBlur={e => setTempSettings(prev => {
-                        const {name, value} = e.target;
-                        if (value === "") {
-                            return {
-                                ...prev,
-                                [name]: 0
-                            }
-                        }
-                        else {
-                            return prev
-                        }
-                    })}
-
-                    type="number"
-                    min="1"
-                    step="1"
-                />
-                <RiArrowUpSLine className="absolute size-8 right-2 -top-1 text-optionText font-semibold" onClick={() => setTempSettings(prev => ({
-                    ...prev,
-                    [rest.name]: Number(prev[rest.name] || 0) + (1 * 60 * 1000) // increment by 1 minute
-                }))} />
-                <RiArrowDownSLine className="absolute size-8 right-2 -bottom-1 text-optionText" onClick={() => setTempSettings(prev => ({
-                    ...prev,
-                    [rest.name]: Math.max((2 * 60 * 1000), Number(prev[rest.name] || 0)) - (1 * 60 * 1000) // decrement by 1 minute
-                }))}/>
-            </div>
-        </label>
-    )
-}
+import TimeOption from "./TimeOption"
 
 function FontOption({font, setTempSettings, tempSettings, ...rest}) { 
     return <button className={`grid place-content-center rounded-full size-12 font-${font} ${tempSettings.fontOption === rest.name ? "bg-darkerBackground text-white" : "bg-gray-400"}`} {...rest} onClick={(e) => setTempSettings(prev => ({...prev, fontOption: e.target.name}))}>Aa</button>
@@ -113,21 +59,21 @@ export default function Settings({settings, onApply}) {
                             name="pomodoro" 
                             value={pomodoro === "" ? "" : (pomodoro / 1000 / 60)}
                             setTempSettings={setTempSettings}
-                            settings={settings}
+                            tempSettings={tempSettings}
                             >pomodoro
                         </TimeOption>
                         <TimeOption 
                             name="shortBreak" 
                             value={shortBreak === "" ? "" : (shortBreak / 1000 / 60)}
                             setTempSettings={setTempSettings}
-                            settings={settings}
+                            tempSettings={tempSettings}
                             >short break
                         </TimeOption>
                         <TimeOption 
                             name="longBreak" 
                             value={longBreak === "" ? "" : (longBreak / 1000 / 60)}
                             setTempSettings={setTempSettings}
-                            settings={settings}
+                            tempSettings={tempSettings}
                             >long break
                         </TimeOption>
                     </section>
@@ -169,7 +115,7 @@ export default function Settings({settings, onApply}) {
                     </FontColorSection>
 
                     <button 
-                        className={`bg-${settings.colorOption} text-white text-2xl font-normal absolute rounded-full w-48 py-4 bottom-0 translate-y-8 self-center`}
+                        className={`bg-${tempSettings.colorOption} text-white text-2xl font-normal absolute rounded-full w-48 py-4 bottom-0 translate-y-8 self-center`}
                         onClick={handleApply}
                     >Apply</button>
                 </div>
