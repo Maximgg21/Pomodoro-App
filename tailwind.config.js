@@ -8,6 +8,9 @@ export default {
     'font-roboto',
     'font-merriweather',
     'font-lora',
+    'focus:border-theme1',
+    'focus:border-theme2',
+    'focus:border-theme3',
   ],
   theme: {
     fontFamily: {
@@ -21,7 +24,7 @@ export default {
         theme1: "rgba(248, 112, 111, 1)",
         theme2: "rgba(112, 243, 248, 1)",
         theme3: "rgba(217, 129, 247, 1)",
-        optionInput: "rgba(238, 241, 251, 1)",
+        timeOptionInput: "rgba(238, 241, 251, 1)",
         settingsIcon: "rgba(123, 127, 158, 1)",
         optionText: "rgba(94, 98, 125, 1)",
         background: "rgba(30, 33, 64, 1)",

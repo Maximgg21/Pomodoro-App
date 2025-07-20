@@ -67,7 +67,7 @@ function App() {
       <div className="text-logo font-bold text-center uppercase grid ">
         <div className="text-2xl tracking-[10px]">Pomodoro</div>
       </div>
-      <div className="max-w- flex p-2 bg-slate-900 rounded-full tracking-tight">
+      <div className="flex p-2 bg-slate-900 rounded-full tracking-tight">
         <TimeOptionButton
           settings={settings}
           currentOption={timerMode}
