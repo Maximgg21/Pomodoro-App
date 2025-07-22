@@ -57,7 +57,6 @@ function App() {
   }, [isRunning]);
 
   const handleApply = (newSettings) => {
-    setSettings(newSettings);
     setRemainingTime(newSettings[timerMode]);
     setIsRunning(false);
   }
@@ -115,6 +114,7 @@ function App() {
 
       <Settings
         settings={settings}
+        setSettings={setSettings}
         onApply={handleApply}
       />
 

@@ -1,36 +1,41 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { MdDone } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
 import { IoMdSettings } from "react-icons/io";
 import TimeOption from "./TimeOption"
 
-function FontOption({font, setTempSettings, tempSettings, ...rest}) { 
-    return <button className={`grid place-content-center rounded-full size-12 font-${font} ${tempSettings.fontOption === rest.name ? "bg-darkerBackground text-white" : "bg-gray-400"}`} {...rest} onClick={(e) => setTempSettings(prev => ({...prev, fontOption: e.target.name}))}>Aa</button>
+function FontOption({font, setSettings, settings, ...rest}) { 
+    return <button className={`grid place-content-center rounded-full size-12 font-${font} ${settings.fontOption === rest.name ? "bg-darkerBackground text-white" : "bg-gray-400"}`} {...rest} onClick={(e) => setSettings(prev => ({...prev, fontOption: e.target.name}))}>Aa</button>
 }
 
-function ColorOption({color, setTempSettings, tempSettings, ...rest}) {
+function ColorOption({color, setSettings, settings, ...rest}) {
     return (
-        <button className={`${color} size-12 rounded-full flex justify-center items-center`} {...rest} onClick={(e) => setTempSettings(prev => ({...prev, colorOption: e.target.name}))}>
-            {tempSettings.colorOption === rest.name && <MdDone className="pointer-events-none" size={24}/>}
+        <button className={`${color} size-12 rounded-full flex justify-center items-center`} {...rest} onClick={(e) => setSettings(prev => ({...prev, colorOption: e.target.name}))}>
+            {settings.colorOption === rest.name && <MdDone className="pointer-events-none" size={24}/>}
         </button>
     )
 }
 
-export default function Settings({settings, onApply}) {
+export default function Settings({settings, setSettings, onApply}) {
     const [showSettings, setShowSettings] = useState(false);
-    const [tempSettings, setTempSettings] = useState(settings);
-    const {pomodoro, shortBreak, longBreak} = tempSettings;
+    const prevSettings = useRef(settings);
+    const {pomodoro, shortBreak, longBreak} = settings;
     const Title = ({children}) => <div className="flex justify-center uppercase font-semibold tracking-widest">{children}</div>
     const Hr = () => <hr className="border-logo w-full"/>
     
     function handleApply() {
-        onApply(tempSettings);
+        onApply(settings);
         setShowSettings(false);
     }
 
     function handleClose() {
         setShowSettings(false);
-        setTempSettings(settings);
+        setSettings(prevSettings.current);
+    }
+
+    function handleOpen() {
+        setShowSettings(true);
+        prevSettings.current = settings;
     }
 
     function FontColorSection({children}) {
@@ -39,7 +44,7 @@ export default function Settings({settings, onApply}) {
 
     return (
         <>
-            <button className="touch-manipulation" onClick={() => {setShowSettings(true)}}>
+            <button className="touch-manipulation" onClick={handleOpen}>
                 <IoMdSettings className="size-10 text-optionText" />
             </button>
 
@@ -58,22 +63,22 @@ export default function Settings({settings, onApply}) {
                         <TimeOption 
                             name="pomodoro" 
                             value={pomodoro === "" ? "" : (pomodoro / 1000 / 60)}
-                            setTempSettings={setTempSettings}
-                            tempSettings={tempSettings}
+                            setSettings={setSettings}
+                            settings={settings}
                             >pomodoro
                         </TimeOption>
                         <TimeOption 
                             name="shortBreak" 
                             value={shortBreak === "" ? "" : (shortBreak / 1000 / 60)}
-                            setTempSettings={setTempSettings}
-                            tempSettings={tempSettings}
+                            setSettings={setSettings}
+                            settings={settings}
                             >short break
                         </TimeOption>
                         <TimeOption 
                             name="longBreak" 
                             value={longBreak === "" ? "" : (longBreak / 1000 / 60)}
-                            setTempSettings={setTempSettings}
-                            tempSettings={tempSettings}
+                            setSettings={setSettings}
+                            settings={settings}
                             >long break
                         </TimeOption>
                     </section>
@@ -82,16 +87,16 @@ export default function Settings({settings, onApply}) {
                         <Title>font</Title>
                         <div className="flex gap-5 justify-center">
                             <FontOption 
-                            setTempSettings={setTempSettings}
-                            tempSettings={tempSettings}
+                            setSettings={setSettings}
+                            settings={settings}
                             font="roboto" name="roboto"/>
                             <FontOption 
-                            setTempSettings={setTempSettings}
-                            tempSettings={tempSettings}
+                            setSettings={setSettings}
+                            settings={settings}
                             font="merriweather" name="merriweather"/>
                             <FontOption 
-                            setTempSettings={setTempSettings}
-                            tempSettings={tempSettings}
+                            setSettings={setSettings}
+                            settings={settings}
                             font="lora" name="lora"/>
                         </div>
                     </FontColorSection>
@@ -100,22 +105,22 @@ export default function Settings({settings, onApply}) {
                         <Title>color</Title>
                         <div className="flex gap-5 justify-center">
                             <ColorOption 
-                            setTempSettings={setTempSettings}
-                            tempSettings={tempSettings}
+                            setSettings={setSettings}
+                            settings={settings}
                             color="bg-theme1" name="theme1"/>
                             <ColorOption 
-                            setTempSettings={setTempSettings}
-                            tempSettings={tempSettings}
+                            setSettings={setSettings}
+                            settings={settings}
                             color="bg-theme2" name="theme2"/>
                             <ColorOption 
-                            setTempSettings={setTempSettings}
-                            tempSettings={tempSettings}
+                            setSettings={setSettings}
+                            settings={settings}
                             color="bg-theme3" name="theme3"/>
                         </div>
                     </FontColorSection>
 
                     <button 
-                        className={`bg-${tempSettings.colorOption} text-white text-2xl font-normal absolute rounded-full w-48 py-4 bottom-0 translate-y-8 self-center`}
+                        className={`bg-${settings.colorOption} text-white text-2xl font-normal absolute rounded-full w-48 py-4 bottom-0 translate-y-8 self-center`}
                         onClick={handleApply}
                     >Apply</button>
                 </div>
